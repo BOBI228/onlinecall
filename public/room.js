@@ -1,6 +1,19 @@
 const roomId = window.location.pathname.split('/').filter(Boolean).pop();
 const meetingLink = `${window.location.origin}/room/${roomId}`;
 
+
+const DEFAULT_ICE_SERVERS = [
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun1.l.google.com:19302' }
+];
+
+const configuredIceServers = Array.isArray(window.APP_CONFIG?.iceServers)
+  ? window.APP_CONFIG.iceServers.filter((entry) => entry && entry.urls)
+  : [];
+
+const ICE_SERVERS = configuredIceServers.length ? configuredIceServers : DEFAULT_ICE_SERVERS;
+
+
 const socket = io({ autoConnect: false });
 
 const statusElement = document.getElementById('status');
@@ -204,10 +217,14 @@ async function createPeerConnection(peerId, initiator = false) {
   }
 
   const configuration = {
+
+    iceServers: ICE_SERVERS
+=======
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
       { urls: 'stun:stun1.l.google.com:19302' }
     ]
+
   };
 
   const peerConnection = new RTCPeerConnection(configuration);

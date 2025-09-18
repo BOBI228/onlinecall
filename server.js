@@ -1,3 +1,83 @@
+
+require('dotenv').config();
+
+const path = require('path');
+const http = require('http');
+const express = require('express');
+const compression = require('compression');
+const { v4: uuidv4 } = require('uuid');
+const { Server } = require('socket.io');
+
+const DEFAULT_ICE_SERVERS = [
+  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun1.l.google.com:19302' }
+];
+
+function parseIceServers(value) {
+  if (!value) {
+    return DEFAULT_ICE_SERVERS;
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed;
+    }
+    console.warn('ICE_SERVERS must be a JSON array. Falling back to defaults.');
+  } catch (error) {
+    console.warn('Unable to parse ICE_SERVERS. Falling back to defaults.', error);
+  }
+
+  return DEFAULT_ICE_SERVERS;
+}
+
+function parseOrigins(value) {
+  if (!value) {
+    return [];
+  }
+
+  return value
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
+
+const app = express();
+app.disable('x-powered-by');
+app.set('trust proxy', process.env.TRUST_PROXY ?? '1');
+app.use(compression());
+
+const iceServers = parseIceServers(process.env.ICE_SERVERS);
+const allowedOrigins = parseOrigins(process.env.CORS_ORIGINS);
+
+const server = http.createServer(app);
+const io = new Server(
+  server,
+  allowedOrigins.length
+    ? {
+        cors: {
+          origin: allowedOrigins,
+          methods: ['GET', 'POST'],
+          credentials: true
+        }
+      }
+    : undefined
+);
+
+const rawPort = Number.parseInt(process.env.PORT ?? '3000', 10);
+const PORT = Number.isNaN(rawPort) ? 3000 : rawPort;
+const HOST = process.env.HOST || '0.0.0.0';
+
+app.get('/healthz', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+app.get('/app-config.js', (req, res) => {
+  res.type('application/javascript');
+  res.set('Cache-Control', 'no-store');
+  res.send(`window.APP_CONFIG = ${JSON.stringify({ iceServers })};`);
+});
+=======
 const path = require('path');
 const http = require('http');
 const express = require('express');
@@ -9,6 +89,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -84,6 +165,18 @@ io.on('connection', (socket) => {
   });
 });
 
+
+server.listen(PORT, HOST, () => {
+  const displayHost = HOST === '0.0.0.0' ? '0.0.0.0 (all interfaces)' : HOST;
+  console.log(`Server listening on ${displayHost}:${PORT}`);
+  if (allowedOrigins.length) {
+    console.log(`Socket.IO CORS whitelist: ${allowedOrigins.join(', ')}`);
+  }
+  console.log(
+    `Using ${iceServers.length} ICE server${iceServers.length === 1 ? '' : 's'} for WebRTC signalling.`
+  );
+=======
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
+
 });
