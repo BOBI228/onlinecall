@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OnlineCall — аудио конференции</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="home">
+    <main class="home__container">
+      <h1 class="brand">OnlineCall</h1>
+      <p class="home__tagline">
+        Организуйте защищённые аудио встречи и подключайтесь по ссылке, как в Google Meet, но без видео.
+      </p>
+      <div class="home__card">
+        <button id="create-meeting" class="button button--primary">Создать встречу</button>
+        <div class="divider">или</div>
+        <div class="join-form">
+          <label class="join-form__label" for="room-code">Введите код комнаты или ссылку</label>
+          <input
+            id="room-code"
+            class="input"
+            type="text"
+            placeholder="Например: 1234-5678 или https://.../room/1234-5678"
+            autocomplete="off"
+          />
+          <button id="join-meeting" class="button">Присоединиться</button>
+          <p id="error" class="error" role="alert" aria-live="polite"></p>
+        </div>
+      </div>
+      <footer class="home__footer">
+        <p>Сервис работает прямо в браузере: никакой установки и только звук.</p>
+      </footer>
+    </main>
+    <script src="/index.js" type="module"></script>
+  </body>
+</html>
