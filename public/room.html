@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Онлайн аудио встреча — OnlineCall</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="room">
+    <header class="top-bar">
+      <a class="brand" href="/">OnlineCall</a>
+      <div class="top-bar__info">
+        <span class="top-bar__room">Комната: <code id="meeting-id"></code></span>
+      </div>
+      <div class="top-bar__actions">
+        <button id="copy-link" class="button">Скопировать ссылку</button>
+        <button id="leave-call" class="button button--danger">Покинуть</button>
+      </div>
+    </header>
+
+    <main class="room__layout">
+      <section class="room__sidebar">
+        <p id="status" class="status">Подключение...</p>
+        <div class="controls">
+          <button id="toggle-mic" class="button button--primary">Выключить микрофон</button>
+        </div>
+        <div class="meeting-link">
+          <span class="meeting-link__label">Ссылка на встречу</span>
+          <span id="meeting-link" class="meeting-link__value"></span>
+        </div>
+        <div class="participants">
+          <h2 class="participants__title">
+            Участники <span id="participants-count" class="badge">0</span>
+          </h2>
+          <ul id="participants-list" class="participants__list"></ul>
+        </div>
+      </section>
+
+      <section class="audio-grid" id="audio-grid">
+        <div class="audio-tile audio-tile--local" data-participant="local">
+          <div class="audio-tile__header">
+            <span class="audio-tile__name" id="local-name">Вы</span>
+            <span class="audio-tile__label">Ваш микрофон</span>
+          </div>
+          <audio id="local-audio" autoplay muted></audio>
+        </div>
+      </section>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/room.js" type="module"></script>
+  </body>
+</html>
