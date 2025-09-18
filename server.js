@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const path = require('path');
@@ -78,19 +77,6 @@ app.get('/app-config.js', (req, res) => {
   res.send(`window.APP_CONFIG = ${JSON.stringify({ iceServers })};`);
 });
 
-const path = require('path');
-const http = require('http');
-const express = require('express');
-const { v4: uuidv4 } = require('uuid');
-const { Server } = require('socket.io');
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
-const PORT = process.env.PORT || 3000;
-
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/new', (req, res) => {
@@ -165,7 +151,6 @@ io.on('connection', (socket) => {
   });
 });
 
-
 server.listen(PORT, HOST, () => {
   const displayHost = HOST === '0.0.0.0' ? '0.0.0.0 (all interfaces)' : HOST;
   console.log(`Server listening on ${displayHost}:${PORT}`);
@@ -175,8 +160,4 @@ server.listen(PORT, HOST, () => {
   console.log(
     `Using ${iceServers.length} ICE server${iceServers.length === 1 ? '' : 's'} for WebRTC signalling.`
   );
-
-server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-
 });
