@@ -1,6 +1,7 @@
 const roomId = window.location.pathname.split('/').filter(Boolean).pop();
 const meetingLink = `${window.location.origin}/room/${roomId}`;
 
+
 const DEFAULT_ICE_SERVERS = [
   { urls: 'stun:stun.l.google.com:19302' },
   { urls: 'stun:stun1.l.google.com:19302' }
@@ -11,6 +12,7 @@ const configuredIceServers = Array.isArray(window.APP_CONFIG?.iceServers)
   : [];
 
 const ICE_SERVERS = configuredIceServers.length ? configuredIceServers : DEFAULT_ICE_SERVERS;
+
 
 const socket = io({ autoConnect: false });
 
@@ -215,7 +217,14 @@ async function createPeerConnection(peerId, initiator = false) {
   }
 
   const configuration = {
+
     iceServers: ICE_SERVERS
+=======
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' }
+    ]
+
   };
 
   const peerConnection = new RTCPeerConnection(configuration);
