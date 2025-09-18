@@ -77,7 +77,7 @@ app.get('/app-config.js', (req, res) => {
   res.set('Cache-Control', 'no-store');
   res.send(`window.APP_CONFIG = ${JSON.stringify({ iceServers })};`);
 });
-=======
+
 const path = require('path');
 const http = require('http');
 const express = require('express');
@@ -175,7 +175,7 @@ server.listen(PORT, HOST, () => {
   console.log(
     `Using ${iceServers.length} ICE server${iceServers.length === 1 ? '' : 's'} for WebRTC signalling.`
   );
-=======
+
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 
